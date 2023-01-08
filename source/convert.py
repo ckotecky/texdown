@@ -560,19 +560,8 @@ def main(args: argparse.Namespace):
 	with open(args.input, 'r') as file:
 		text = file.read()
 
-	# text = replaceStrings(text)
 	document = Document(args.title, text)
-	# document.parse(text)
 	document.save(args.output)
-	# document.convert()
-
-	# print(document.chapters[0].sections[0])
-	# print(document)
-
-	# print(document.chapters[0].sections[6])
-	# print(document.chapters[0].sections[0])
-	# print(document.chapters[-2].sections[0].output())
-	# print(document.chapters[-2].output())
 
 	return
 
