@@ -2,14 +2,7 @@
 
 import argparse
 import os
-from itertools import pairwise
-
-
-parser = argparse.ArgumentParser()
-parser.add_argument('--input', default='', type=str, help='Input file path')
-parser.add_argument('--output', default='', type=str, help='Output file path')
-parser.add_argument('--title', default='', type=str, help='Document title')
-
+from unidecode import unidecode
 
 conversions = {
 	'`' : '$',
@@ -44,8 +37,6 @@ conversions = {
 	'τ' : '\\tau ',
 
 	'𝓙' : '\\mathcal{F}',
-
-
 
 	'𝔼' : '\\mathbb{E}',
 	'ℕ' : '\\mathbb{N}',
@@ -82,7 +73,8 @@ sectionCodes = {
 }
 
 subsectionTypes = {
-	'Proof:' : 'proof'
+	'Proof:' : 'proof',
+	'Důkaz:' : 'proof'
 }
 
 
@@ -331,10 +323,10 @@ def sanitizeString(s):
 	o = ''
 
 	for c in s:
-		if c.isalnum():
+		if c.isalnum() or c == ' ':
 			o += c
 
-	return o
+	return unidecode(o)
 
 
 
@@ -555,20 +547,65 @@ def parse(text):
 
 
 
+def merge(args):
+	merged = ''
 
-def main(args: argparse.Namespace):
+
+	for filename in sorted(os.listdir(args.input)):
+		path = os.path.join(args.input, filename)
+
+		if os.path.isfile(path) and os.path.splitext(path)[-1] == '.md':
+			with open(path, 'r') as inFile:
+				text = inFile.read()
+
+				lines = text.splitlines()
+				lines = lines[args.strip_top : len(lines) - args.strip_bottom + 1]
+
+				text = '\n'.join(lines)
+
+				merged += text + '\n'
+
+	if args.output != '':
+		with open(args.output, 'w') as outFile:
+			outFile.write(merged)
+
+
+def convert(args):
 	with open(args.input, 'r') as file:
 		text = file.read()
 
 	document = Document(args.title, text)
 	document.save(args.output)
 
+
+def main():
+	parser = argparse.ArgumentParser(
+			prog = 'texdown',
+			description = 'Converts specially formated markdown to latex.'
+		)
+
+	parser.add_argument('-i', '--input', default='', type=str, help='Input file path')
+	parser.add_argument('-o', '--output', default='', type=str, help='Output file path')
+	parser.add_argument('-t', '--title', default='', type=str, help='Document title')
+	parser.add_argument('-m', '--merge', default=False, type=str, help='Document title')
+	parser.add_argument('-c', '--convert', default=False, type=str, help='Document title')
+	parser.add_argument('-st', '--strip_top', default=0, type=int, help='Number of lines to remove from the top')
+	parser.add_argument('-sb', '--strip_bottom', default=0, type=int, help='Number of lines to remove from the bottom')
+
+	args = parser.parse_args()
+
+	if args.merge:
+		merge(args)
+
+	elif args.convert:
+		convert(args)
+
 	return
 
 
 
 if __name__ == '__main__':
-	args = parser.parse_args([] if "__file__" not in globals() else None)
+	# args = parser.parse_args([] if "__file__" not in globals() else None)
 
-	main(args)
+	main()
 
