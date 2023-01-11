@@ -2,65 +2,67 @@
 
 import argparse
 import os
+import json 
+
 from unidecode import unidecode
 
-conversions = {
-	'\\\\' : '\\backslash ',
+# conversions = {
+# 	'\\\\' : '\\backslash ',
 
-	# '`' : '$',
+# 	# '`' : '$',
 
-	'∃' : '\\exists ',
-	'∄' : '\\nexists ',
-	'∀' : '\\forall ',
+# 	'∃' : '\\exists ',
+# 	'∄' : '\\nexists ',
+# 	'∀' : '\\forall ',
 
-	'∈' : '\\in ',
-	'∉' : '\\notin ',
+# 	'∈' : '\\in ',
+# 	'∉' : '\\notin ',
 
-	'⊂' : '\\subset ',
-	'⊆' : '\\subseteq ',
-	'⊃' : '\\supset ',
-	'⊇' : '\\supseteq ',
+# 	'⊂' : '\\subset ',
+# 	'⊆' : '\\subseteq ',
+# 	'⊃' : '\\supset ',
+# 	'⊇' : '\\supseteq ',
 
-	'α' : '\\alpha ',
-	'β' : '\\beta ',
-	'γ' : '\\gamma ',
-	'δ' : '\\delta ',
-	'Δ' : '\\Delta ',
-	'Θ' : '\\Theta ',
-	'𝛝' : '\\vartheta ',
-	'𝜗' : '\\vartheta ',
-	'ω' : '\\omega ',
-	'Ω' : '\\Omega ',
-	'π' : '\\pi ',
-	'ε' : '\\epsilon ',
-	'φ' : '\\varphi ',
-	'σ' : '\\sigma ',
-	'λ' : '\\lambda ',
-	'τ' : '\\tau ',
+# 	'α' : '\\alpha ',
+# 	'β' : '\\beta ',
+# 	'γ' : '\\gamma ',
+# 	'δ' : '\\delta ',
+# 	'Δ' : '\\Delta ',
+# 	'Θ' : '\\Theta ',
+# 	'𝛝' : '\\vartheta ',
+# 	'𝜗' : '\\vartheta ',
+# 	'ω' : '\\omega ',
+# 	'Ω' : '\\Omega ',
+# 	'π' : '\\pi ',
+# 	'ε' : '\\epsilon ',
+# 	'φ' : '\\varphi ',
+# 	'σ' : '\\sigma ',
+# 	'λ' : '\\lambda ',
+# 	'τ' : '\\tau ',
 
-	'𝓘' : '\\mathcal{I}',
-	'𝓙' : '\\mathcal{F}',
-	'𝓕' : '\\mathcal{F}',
+# 	'𝓘' : '\\mathcal{I}',
+# 	'𝓙' : '\\mathcal{F}',
+# 	'𝓕' : '\\mathcal{F}',
 
 
-	'𝔼' : '\\mathbb{E}',
-	'ℕ' : '\\mathbb{N}',
+# 	'𝔼' : '\\mathbb{E}',
+# 	'ℕ' : '\\mathbb{N}',
 	
 
-	'Σ' : '\\sum\\limits ',
+# 	'Σ' : '\\sum\\limits ',
 
-	'<=>' : '\\iff ',
-	'=>' : '\\implies ',
-	'<=' : '\\impliedby ',
-	'->' : '\\to ',
+# 	'<=>' : '\\iff ',
+# 	'=>' : '\\implies ',
+# 	'<=' : '\\impliedby ',
+# 	'->' : '\\to ',
 
-	'≐' : '\\doteq ',
+# 	'≐' : '\\doteq ',
 	
-	'&' : '\\&',
-	'#' : '\\#',
+# 	'&' : '\\&',
+# 	'#' : '\\#',
 
-	'⨄' : '\\uplus'
-}
+# 	'⨄' : '\\uplus'
+# }
 
 sectionTypes = {
 	'Df' : 'definition',
@@ -403,13 +405,6 @@ class Chapter:
 			f.write(str(self))
 
 
-def replaceStrings(text):
-	for c in conversions:
-		text = text.replace(c, conversions[c])
-
-	return text
-
-
 
 def extractSectionTitleAndType(line):
 	parts = line.split(':')
@@ -685,6 +680,13 @@ def convert(args):
 	document.save(args.output)
 
 
+def replaceStrings(text):
+	for c in conversions:
+		text = text.replace(c, conversions[c])
+
+	return text
+
+
 def main():
 	parser = argparse.ArgumentParser(
 			prog = 'texdown',
@@ -706,6 +708,12 @@ def main():
 		merge(args)
 
 	elif args.convert:
+		scriptPath = os.path.join(os.path.split(__file__)[0], 'stringMap.json')
+
+		with open(scriptPath, 'r') as file:
+			global conversions
+			conversions = json.load(file)
+
 		convert(args)
 
 	return
@@ -713,7 +721,5 @@ def main():
 
 
 if __name__ == '__main__':
-	# args = parser.parse_args([] if "__file__" not in globals() else None)
-
 	main()
 
