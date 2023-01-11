@@ -1,4 +1,5 @@
-import json
+#!/usr/bin/env python3
+
 
 stringMap = {
 	'\\\\' : '\\backslash ',
@@ -56,10 +57,52 @@ stringMap = {
 	'⨄' : '\\uplus'
 }
 
+sectionTypes = {
+	'Df' : 'definition',
+	'Th' : 'theorem',
+	'Thm' : 'theorem',
+	'Ob' : 'observation',
+	'Ex' : 'example',
+	'Vt' : 'theorem',
+	'Pz' : 'observation',
+	'Př' : 'example',
+	'Alg' : 'algorithm',
+	'Blk' : 'block'
+}
 
-with open('stringMap.json', 'w') as file:
-	json.dump(stringMap, file, indent=4)
+
+# for filenames
+sectionCodes = {
+	'definition' : 'df',
+	'theorem' : 'th',
+	'observation' : 'ob',
+	'example' : 'ex',
+	'algorithm' : 'alg',
+	'block' : 'misc'
+}
+
+subsectionTypes = {
+	'Proof:' : 'proof',
+	'Důkaz:' : 'proof'
+}
+
+
+def main():
+	import json
+
+	with open('stringMap.json', 'w') as file:
+		json.dump(stringMap, file, indent=4)
+
+	with open('sectionTypes.json', 'w') as file:
+		json.dump(sectionTypes, file, indent=4)
+
+	with open('sectionCodes.json', 'w') as file:
+		json.dump(sectionCodes, file, indent=4)
+
+	with open('subsectionTypes.json', 'w') as file:
+		json.dump(subsectionTypes, file, indent=4)
 
 
 
-
+if __name__ == '__main__':
+	main()

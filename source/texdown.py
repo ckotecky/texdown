@@ -6,92 +6,6 @@ import json
 
 from unidecode import unidecode
 
-# conversions = {
-# 	'\\\\' : '\\backslash ',
-
-# 	# '`' : '$',
-
-# 	'∃' : '\\exists ',
-# 	'∄' : '\\nexists ',
-# 	'∀' : '\\forall ',
-
-# 	'∈' : '\\in ',
-# 	'∉' : '\\notin ',
-
-# 	'⊂' : '\\subset ',
-# 	'⊆' : '\\subseteq ',
-# 	'⊃' : '\\supset ',
-# 	'⊇' : '\\supseteq ',
-
-# 	'α' : '\\alpha ',
-# 	'β' : '\\beta ',
-# 	'γ' : '\\gamma ',
-# 	'δ' : '\\delta ',
-# 	'Δ' : '\\Delta ',
-# 	'Θ' : '\\Theta ',
-# 	'𝛝' : '\\vartheta ',
-# 	'𝜗' : '\\vartheta ',
-# 	'ω' : '\\omega ',
-# 	'Ω' : '\\Omega ',
-# 	'π' : '\\pi ',
-# 	'ε' : '\\epsilon ',
-# 	'φ' : '\\varphi ',
-# 	'σ' : '\\sigma ',
-# 	'λ' : '\\lambda ',
-# 	'τ' : '\\tau ',
-
-# 	'𝓘' : '\\mathcal{I}',
-# 	'𝓙' : '\\mathcal{F}',
-# 	'𝓕' : '\\mathcal{F}',
-
-
-# 	'𝔼' : '\\mathbb{E}',
-# 	'ℕ' : '\\mathbb{N}',
-	
-
-# 	'Σ' : '\\sum\\limits ',
-
-# 	'<=>' : '\\iff ',
-# 	'=>' : '\\implies ',
-# 	'<=' : '\\impliedby ',
-# 	'->' : '\\to ',
-
-# 	'≐' : '\\doteq ',
-	
-# 	'&' : '\\&',
-# 	'#' : '\\#',
-
-# 	'⨄' : '\\uplus'
-# }
-
-sectionTypes = {
-	'Df' : 'definition',
-	'Th' : 'theorem',
-	'Thm' : 'theorem',
-	'Ob' : 'observation',
-	'Ex' : 'example',
-	'Vt' : 'theorem',
-	'Pz' : 'observation',
-	'Př' : 'example',
-	'Alg' : 'algorithm',
-	'Blk' : 'block'
-}
-
-
-# for filenames
-sectionCodes = {
-	'definition' : 'df',
-	'theorem' : 'th',
-	'observation' : 'ob',
-	'example' : 'ex',
-	'algorithm' : 'alg',
-	'block' : 'misc'
-}
-
-subsectionTypes = {
-	'Proof:' : 'proof',
-	'Důkaz:' : 'proof'
-}
 
 
 
@@ -667,14 +581,15 @@ def merge(args):
 
 				merged += text + '\n'
 
-	if args.output != '':
-		with open(args.output, 'w') as outFile:
-			outFile.write(merged)
+	return merged
 
 
-def convert(args):
-	with open(args.input, 'r') as file:
-		text = file.read()
+def convert(args, text = None):
+	loadConfiguration()
+
+	if text == None:
+		with open(args.input, 'r') as file:
+			text = file.read()
 
 	document = Document(args.title, text)
 	document.save(args.output)
@@ -687,11 +602,31 @@ def replaceStrings(text):
 	return text
 
 
+def loadConfiguration():
+	scriptPath = os.path.split(__file__)[0]
+
+	with open(os.path.join(scriptPath, 'stringMap.json'), 'r') as file:
+		global conversions
+		conversions = json.load(file)
+
+	with open(os.path.join(scriptPath, 'sectionTypes.json'), 'r') as file:
+		global sectionTypes
+		sectionTypes = json.load(file)
+
+	with open(os.path.join(scriptPath, 'sectionCodes.json'), 'r') as file:
+		global sectionCodes
+		sectionCodes = json.load(file)
+
+	with open(os.path.join(scriptPath, 'subsectionTypes.json'), 'r') as file:
+		global subsectionTypes
+		subsectionTypes = json.load(file)	
+
+
 def main():
 	parser = argparse.ArgumentParser(
-			prog = 'texdown',
-			description = 'Converts specially formated markdown to latex.'
-		)
+		prog = 'texdown',
+		description = 'Converts specially formated markdown to latex.'
+	)
 
 	parser.add_argument('-i', '--input', default='', type=str, help='Input file path')
 	parser.add_argument('-o', '--output', default='', type=str, help='Output file path')
@@ -705,15 +640,16 @@ def main():
 	args = parser.parse_args()
 
 	if args.merge:
-		merge(args)
+		merged = merge(args)
+
+		if not args.convert:
+			with open(args.output, 'w') as outFile:
+				outFile.write(merged)
+
+		else:
+			convert(args, text = merged)
 
 	elif args.convert:
-		scriptPath = os.path.join(os.path.split(__file__)[0], 'stringMap.json')
-
-		with open(scriptPath, 'r') as file:
-			global conversions
-			conversions = json.load(file)
-
 		convert(args)
 
 	return
