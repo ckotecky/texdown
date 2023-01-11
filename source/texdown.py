@@ -126,48 +126,31 @@ class Line(Entry):
 	def parseLine(self, line):
 		blockDelimiters = {
 			'`' : MathBlock,
-			'¶' : TextBlock
+			'¶' : TextBlock,
+			'**' : BoldBlock
 		}
 
 		i = 0
 
 		while i < len(line):
-			c = line[i]
+			processed = False
 
-			if c in blockDelimiters.keys():
-				e = line.find(c, i + 1) # block end index
+			for key in blockDelimiters:
+				if line[i:].startswith(key):
+					e = line.find(key, i + len(key))
 
-				block = blockDelimiters[c](line[i + 1:e])
-				self.addItem(block)
+					block = blockDelimiters[key](line[i + len(key) : e])
+					self.addItem(block)
 
-				i = e + 1
+					i = e + len(key)
+					processed = True
 
-			else:
-				self.addItem(c)
+					break
+
+			if not processed:
+				self.addItem(line[i])
 
 				i += 1
-
-
-			# if c in keyCharacters:
-			# 	if c == '`':
-			# 		blockType = MathBlock
-
-			# 	elif c == '¶':
-			# 		blockType = TextBlock
-
-			# 	# block not opened, add to stack
-			# 	if not isinstance(blockStack[-1], blockType):
-			# 		block = blockType()
-			# 		blockStack[-1].addItem(block)
-			# 		blockStack.append(block)
-
-			# 	# block closed, remove from stack
-			# 	elif len(blockStack) > 1:
-			# 		blockStack.pop()
-
-			# else:
-			# 	blockStack[-1].addItem(c)
-
 
 
 class MathBlock(Line):
@@ -192,6 +175,20 @@ class TextBlock(Line):
 		text += '}'
 
 		return text	
+
+
+
+class BoldBlock(Line):
+	def __repr__(self):
+		text = '\\textbf{'
+
+		for item in self.items:
+			text += str(item)
+
+		text += '}'
+
+		return text	
+
 
 
 
