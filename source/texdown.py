@@ -38,7 +38,10 @@ conversions = {
 	'λ' : '\\lambda ',
 	'τ' : '\\tau ',
 
+	'𝓘' : '\\mathcal{I}',
 	'𝓙' : '\\mathcal{F}',
+	'𝓕' : '\\mathcal{F}',
+
 
 	'𝔼' : '\\mathbb{E}',
 	'ℕ' : '\\mathbb{N}',
@@ -49,7 +52,7 @@ conversions = {
 	'<=>' : '\\iff ',
 	'=>' : '\\implies ',
 	'<=' : '\\impliedby ',
-	'->' : '\to ',
+	'->' : '\\to ',
 
 	'≐' : '\\doteq ',
 	
@@ -141,7 +144,7 @@ class BulletList(Entry):
 		whitespace = '\t' * self.indent
 		keyword = 'enumerate' if self.enumerated else 'itemize'
 
-		text = f'{whitespace}\\begin{{{keyword}}}\n\n'
+		text = f'\n{whitespace}\\begin{{{keyword}}}\n\n'
 
 		if self.indent < 1:
 			text += f'{whitespace}\\itemsep0em\n\n'
@@ -162,7 +165,7 @@ class Subsection(Entry):
 
 
 	def __repr__(self):
-		text = f'\\begin{{{subsectionTypes[self.type]}}}\n'
+		text = f'\n\\begin{{{subsectionTypes[self.type]}}}\n'
 
 		for item in self.items:
 			text += f'{item}\n'
@@ -451,7 +454,7 @@ def extractEntry(lines):
 			return 0, entry, lines[2:]
 
 	line = lines[0]
-	indent = len(line) - len(line.strip())
+	indent = len(line) - len(line.lstrip())
 
 	suffix, itemType = identifyList(line)
 
@@ -518,7 +521,7 @@ def parse(text):
 	sectionCount = 0
 
 	while len(lines) > 0:
-		if len(lines[0].strip()) < 1:
+		if len(lines[0].lstrip()) < 1:
 			lines = lines[1:]
 
 			continue
