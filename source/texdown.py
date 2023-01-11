@@ -5,7 +5,9 @@ import os
 from unidecode import unidecode
 
 conversions = {
-	'`' : '$',
+	'\\\\' : '\\backslash ',
+
+	# '`' : '$',
 
 	'∃' : '\\exists ',
 	'∄' : '\\nexists ',
@@ -52,7 +54,9 @@ conversions = {
 	'≐' : '\\doteq ',
 	
 	'&' : '\\&',
-	'#' : '\\#'
+	'#' : '\\#',
+
+	'⨄' : '\\uplus'
 }
 
 sectionTypes = {
@@ -60,16 +64,23 @@ sectionTypes = {
 	'Th' : 'theorem',
 	'Thm' : 'theorem',
 	'Ob' : 'observation',
-	'Ex' : 'example'
+	'Ex' : 'example',
+	'Vt' : 'theorem',
+	'Pz' : 'observation',
+	'Př' : 'example',
+	'Alg' : 'algorithm',
+	'Blk' : 'block'
 }
 
 
+# for filenames
 sectionCodes = {
 	'definition' : 'df',
 	'theorem' : 'th',
 	'observation' : 'ob',
 	'example' : 'ex',
-	None : 'misc'
+	'algorithm' : 'alg',
+	'block' : 'misc'
 }
 
 subsectionTypes = {
@@ -161,17 +172,110 @@ class Subsection(Entry):
 		return text
 
 
+
+
+
+
+
 class Line(Entry):
 	def __init__(self, text):
 		super().__init__()
 
-		self.text = text
+		self.parseLine(replaceStrings(text))
 
 
 	def __repr__(self):
-		whitespace = '\t' * self.indent
-		
-		return f'{whitespace}{replaceStrings(self.text)}\n'
+		text = '\t' * self.indent
+
+		for item in self.items:
+			text += str(item)
+
+		return text
+
+
+	def addItem(self, item):
+		if isinstance(item, str):
+			if len(self.items) < 1 or not isinstance(self.items[-1], str):
+				self.items.append('')
+
+			self.items[-1] += str(item)
+
+		else:
+			self.items.append(item)
+
+
+	def parseLine(self, line):
+		blockDelimiters = {
+			'`' : MathBlock,
+			'¶' : TextBlock
+		}
+
+		i = 0
+
+		while i < len(line):
+			c = line[i]
+
+			if c in blockDelimiters.keys():
+				e = line.find(c, i + 1) # block end index
+
+				block = blockDelimiters[c](line[i + 1:e])
+				self.addItem(block)
+
+				i = e + 1
+
+			else:
+				self.addItem(c)
+
+				i += 1
+
+
+			# if c in keyCharacters:
+			# 	if c == '`':
+			# 		blockType = MathBlock
+
+			# 	elif c == '¶':
+			# 		blockType = TextBlock
+
+			# 	# block not opened, add to stack
+			# 	if not isinstance(blockStack[-1], blockType):
+			# 		block = blockType()
+			# 		blockStack[-1].addItem(block)
+			# 		blockStack.append(block)
+
+			# 	# block closed, remove from stack
+			# 	elif len(blockStack) > 1:
+			# 		blockStack.pop()
+
+			# else:
+			# 	blockStack[-1].addItem(c)
+
+
+
+class MathBlock(Line):
+	def __repr__(self):
+		text = '$'
+
+		for item in self.items:
+			text += str(item)
+
+		text += '$'
+
+		return text
+
+
+class TextBlock(Line):
+	def __repr__(self):
+		text = '\\text{'
+
+		for item in self.items:
+			text += str(item)
+
+		text += '}'
+
+		return text	
+
+
+
 
 
 class Section:
@@ -185,16 +289,16 @@ class Section:
 	def __repr__(self):
 		name = replaceStrings(self.title) if len(self.title) > 0 else str(self.count)
 
-		if self.type != None:
-			text = f'\\begin{{{self.type}}}[{name}]\n\n' 
-		else:
-			text = f'\\subsection*{{{replaceStrings(self.title)}}}\n\n'
+		# if self.type != None:
+		text = f'\\begin{{{self.type}}}[{name}]\n\n' 
+		# else:
+			# text = f'\\subsection*{{{replaceStrings(self.title)}}}\n\n'
 
 		for item in self.items:
 			text += str(item)
 
-		if self.type != None:
-			text += f'\\end{{{self.type}}}\n' 
+		# if self.type != None:
+		text += f'\\end{{{self.type}}}\n' 
 
 		return text
 
@@ -308,7 +412,7 @@ def extractSectionTitleAndType(line):
 	parts = line.split(':')
 
 	if len(parts) < 2:
-		return line, None
+		return line, 'block'
 
 	prefix = parts[0]
 	title = ' '.join(parts[1:]).strip()
@@ -316,7 +420,7 @@ def extractSectionTitleAndType(line):
 	if prefix in sectionTypes:
 		return title, sectionTypes[prefix]
 
-	return title, None
+	return title, 'block'
 
 
 def sanitizeString(s):
@@ -464,7 +568,7 @@ def parse(text):
 			continue
 
 		if section == None: # start implicit section
-			section = Section('', None)
+			section = Section('', 'block')
 			subsection = None
 
 			section.count = sectionCount
@@ -591,6 +695,7 @@ def main():
 	parser.add_argument('-c', '--convert', default=False, type=str, help='Document title')
 	parser.add_argument('-st', '--strip_top', default=0, type=int, help='Number of lines to remove from the top')
 	parser.add_argument('-sb', '--strip_bottom', default=0, type=int, help='Number of lines to remove from the bottom')
+	parser.add_argument('-l', '--language', default='EN', type=str, choices=['EN', 'CZ'], help='Formatting language')
 
 	args = parser.parse_args()
 
