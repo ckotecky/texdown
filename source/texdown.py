@@ -430,8 +430,6 @@ def identifyList(line):
 		return line, None
 
 	prefix = l[0]
-	# suffix = ' '
-	# suffix = ' '.join(l[1:])
 	prefixEndIndex = len(line.split(prefix)[0]) + len(prefix) + 1
 	suffix = line[prefixEndIndex:]
 
@@ -441,7 +439,6 @@ def identifyList(line):
 		number = int(prefix[:-1])
 
 		listType = number
-		# print(number, suffix)
 
 	elif prefix == '-':
 		listType = '-'

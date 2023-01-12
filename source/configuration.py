@@ -7,6 +7,8 @@ stringMap = {
 	' \\ ' : ' \\backslash ',
 	'`' : '$',
 	'\t' : '\\quad ',
+	'  ' : '\\; ',
+	'   ' : '\\enskip ',
 	
 	'Σ_' : '\\sum\\limits_',
 	'π_' : '\\prod\\limits_',

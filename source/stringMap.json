@@ -2,6 +2,8 @@
     " \\ ": " \\backslash ",
     "`": "$",
     "\t": "\\quad ",
+    "  ": "\\; ",
+    "   ": "\\enskip ",
     "\u03a3_": "\\sum\\limits_",
     "\u03c0_": "\\prod\\limits_",
     "\u2203": "\\exists ",
