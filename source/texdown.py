@@ -8,8 +8,6 @@ from unidecode import unidecode
 
 
 
-
-
 class Entry:
 	def __init__(self):
 		self.items = []
@@ -31,6 +29,7 @@ class Entry:
 		self.items.append(item)
 
 
+
 class ListItem(Entry):
 	def __init__(self, itemType):
 		super().__init__()
@@ -49,6 +48,7 @@ class ListItem(Entry):
 		return text
 
 
+
 class BulletList(Entry):
 	def __init__(self, enumerated):
 		super().__init__()
@@ -63,14 +63,15 @@ class BulletList(Entry):
 		text = f'\n{whitespace}\\begin{{{keyword}}}\n\n'
 
 		if self.indent < 1:
-			text += f'{whitespace}\\itemsep0em\n\n'
+			text += f'{whitespace}\t\\itemsep0em\n\n'
 
 		for item in self.items:
 			text += f'{item}\n'
 
-		text += f'{whitespace}\\end{{{keyword}}}\n'
+		text += f'\n{whitespace}\\end{{{keyword}}}\n'
 
 		return text
+
 
 
 class Subsection(Entry):
@@ -89,10 +90,6 @@ class Subsection(Entry):
 		text += f'\\end{{{subsectionTypes[self.type]}}}\n'
 
 		return text
-
-
-
-
 
 
 
@@ -124,10 +121,18 @@ class Line(Entry):
 
 
 	def parseLine(self, line):
-		blockDelimiters = {
+		blockStartDelimiters = {
 			'`' : MathBlock,
 			'¶' : TextBlock,
 			'**' : BoldBlock
+			# '<' : CenterBlock   # must be limited to outside of a math block
+		}
+
+		blockEndDelimiters = {
+			'`' : '`',
+			'¶' : '¶',
+			'**' : '**'
+			# '<' : '>'
 		}
 
 		i = 0
@@ -135,14 +140,19 @@ class Line(Entry):
 		while i < len(line):
 			processed = False
 
-			for key in blockDelimiters:
+			for key in blockStartDelimiters:
 				if line[i:].startswith(key):
-					e = line.find(key, i + len(key))
+					e = line.find(blockEndDelimiters[key], i + len(key))
 
-					block = blockDelimiters[key](line[i + len(key) : e])
+					if e == -1:
+						break
+
+					block = blockStartDelimiters[key](line[i + len(key) : e])
 					self.addItem(block)
 
-					i = e + len(key)
+					# print(f'added {i}, {e}')
+
+					i = e + len(blockEndDelimiters[key])
 					processed = True
 
 					break
@@ -151,6 +161,7 @@ class Line(Entry):
 				self.addItem(line[i])
 
 				i += 1
+
 
 
 class MathBlock(Line):
@@ -165,6 +176,7 @@ class MathBlock(Line):
 		return text
 
 
+
 class TextBlock(Line):
 	def __repr__(self):
 		text = '\\text{'
@@ -175,6 +187,20 @@ class TextBlock(Line):
 		text += '}'
 
 		return text	
+
+
+class CenterBlock(Line):
+	def __repr__(self):
+		text = '\n\\begin{center}'
+
+		for item in self.items:
+			text += str(item)
+
+		text += '\\end{center}\n'
+
+		return text	
+
+
 
 
 
@@ -191,9 +217,6 @@ class BoldBlock(Line):
 
 
 
-
-
-
 class Section:
 	def __init__(self, title, sectionType):
 		self.title = title
@@ -205,15 +228,11 @@ class Section:
 	def __repr__(self):
 		name = replaceStrings(self.title) if len(self.title) > 0 else str(self.count)
 
-		# if self.type != None:
 		text = f'\\begin{{{self.type}}}[{name}]\n\n' 
-		# else:
-			# text = f'\\subsection*{{{replaceStrings(self.title)}}}\n\n'
 
 		for item in self.items:
 			text += str(item)
 
-		# if self.type != None:
 		text += f'\\end{{{self.type}}}\n' 
 
 		return text
@@ -268,6 +287,7 @@ class Document:
 			f.write(str(self))
 
 
+
 class Chapter:
 	def __init__(self, title):
 		self.title = title
@@ -292,7 +312,7 @@ class Chapter:
 
 
 	def fileName(self):
-		name = str(self.count) + '-' + '_'.join(sanitizeString(self.title).split()).lower()
+		name = f'{self.count:02d}' + '-' + '_'.join(sanitizeString(self.title).split()).lower()
 
 		return name
 
@@ -332,6 +352,7 @@ def extractSectionTitleAndType(line):
 	return title, 'block'
 
 
+
 def sanitizeString(s):
 	o = ''
 
@@ -340,7 +361,6 @@ def sanitizeString(s):
 			o += c
 
 	return unidecode(o)
-
 
 
 def extractEntry(lines):
@@ -380,8 +400,6 @@ def extractEntry(lines):
 		entry = Line(line)
 
 	return indent, entry, lines[1:]
-
-
 
 
 def identifyList(line):
@@ -557,7 +575,6 @@ def parse(text):
 		continue
 
 	return chapters
-
 
 
 def merge(args):

@@ -2,7 +2,8 @@
 
 
 stringMap = {
-	'\\\\' : '\\backslash ',
+	# '\\\\' : '\\backslash ',
+	' \\ ' : ' \\backslash ',
 
 	'∃' : '\\exists ',
 	'∄' : '\\nexists ',
@@ -54,19 +55,26 @@ stringMap = {
 	'&' : '\\&',
 	'#' : '\\#',
 
-	'⨄' : '\\uplus'
+	'⨄' : '\\uplus',
+	'∪' : '\\cup',
+	'∩' : '\\cap'
 }
 
 sectionTypes = {
 	'Df' : 'definition',
 	'Th' : 'theorem',
 	'Thm' : 'theorem',
+	'Lm' : 'lemma',
 	'Ob' : 'observation',
 	'Ex' : 'example',
 	'Vt' : 'theorem',
 	'Pz' : 'observation',
+	'Pb' : 'problem',
 	'Př' : 'example',
 	'Alg' : 'algorithm',
+	'Ds' : 'corollary',
+	'Cr' : 'corollary',
+	'Fakt' : 'fact',
 	'Blk' : 'block'
 }
 
@@ -76,8 +84,12 @@ sectionCodes = {
 	'definition' : 'df',
 	'theorem' : 'th',
 	'observation' : 'ob',
+	'lemma' : 'lm',
 	'example' : 'ex',
 	'algorithm' : 'alg',
+	'corollary' : 'cr',
+	'problem' : 'pb',
+	'fact' : 'fact',
 	'block' : 'misc'
 }
 

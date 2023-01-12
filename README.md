@@ -7,7 +7,7 @@ Convert:
 - `texdown --convert True --input merged.md --output .`
 
 Merge & Convert:
-- `texdown -c True -m True True -i path -o .`
+- `texdown -c True -m True -i path -o .`
 - `texdown --convert True --merge True --input path --output .`
 
 

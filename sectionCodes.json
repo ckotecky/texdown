@@ -1,0 +1,10 @@
+{
+    "definition": "df",
+    "theorem": "th",
+    "observation": "ob",
+    "lemma": "lm",
+    "example": "ex",
+    "algorithm": "alg",
+    "fact": "fact",
+    "block": "misc"
+}
