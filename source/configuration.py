@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
 
 
+# order matters: Σ_ must be before Σ
 stringMap = {
 	# '\\\\' : '\\backslash ',
 	' \\ ' : ' \\backslash ',
+	'`' : '$',
+	'\t' : '\\quad ',
+	
+	'Σ_' : '\\sum\\limits_',
+	'π_' : '\\prod\\limits_',
 
 	'∃' : '\\exists ',
 	'∄' : '\\nexists ',
@@ -31,8 +37,10 @@ stringMap = {
 	'ε' : '\\epsilon ',
 	'φ' : '\\varphi ',
 	'σ' : '\\sigma ',
+	'Σ' : '\\Sigma ',
 	'λ' : '\\lambda ',
 	'τ' : '\\tau ',
+	'π' : '\\pi ',
 
 	'𝓘' : '\\mathcal{I}',
 	'𝓙' : '\\mathcal{F}',
@@ -41,9 +49,6 @@ stringMap = {
 
 	'𝔼' : '\\mathbb{E}',
 	'ℕ' : '\\mathbb{N}',
-	
-
-	'Σ' : '\\sum\\limits ',
 
 	'<=>' : '\\iff ',
 	'=>' : '\\implies ',

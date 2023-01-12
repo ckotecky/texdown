@@ -97,14 +97,19 @@ class Line(Entry):
 	def __init__(self, text):
 		super().__init__()
 
-		self.parseLine(replaceStrings(text))
+		# self.parseLine(replaceStrings(text))
+		self.parseLine(text)
 
 
 	def __repr__(self):
 		text = '\t' * self.indent
 
 		for item in self.items:
-			text += str(item)
+			if isinstance(item, str):
+				text += replaceStrings(item)
+
+			else:
+				text += str(item)
 
 		return text
 
@@ -169,7 +174,11 @@ class MathBlock(Line):
 		text = '$'
 
 		for item in self.items:
-			text += str(item)
+			if isinstance(item, str):
+				text += replaceStrings(item)
+
+			else:
+				text += str(item)
 
 		text += '$'
 
@@ -182,7 +191,11 @@ class TextBlock(Line):
 		text = '\\text{'
 
 		for item in self.items:
-			text += str(item)
+			if isinstance(item, str):
+				text += replaceStrings(item)
+
+			else:
+				text += str(item)
 
 		text += '}'
 
@@ -194,7 +207,11 @@ class CenterBlock(Line):
 		text = '\n\\begin{center}'
 
 		for item in self.items:
-			text += str(item)
+			if isinstance(item, str):
+				text += replaceStrings(item)
+
+			else:
+				text += str(item)
 
 		text += '\\end{center}\n'
 
@@ -209,7 +226,11 @@ class BoldBlock(Line):
 		text = '\\textbf{'
 
 		for item in self.items:
-			text += str(item)
+			if isinstance(item, str):
+				text += replaceStrings(item)
+
+			else:
+				text += str(item)
 
 		text += '}'
 
@@ -409,7 +430,10 @@ def identifyList(line):
 		return line, None
 
 	prefix = l[0]
-	suffix = ' '.join(l[1:])
+	# suffix = ' '
+	# suffix = ' '.join(l[1:])
+	prefixEndIndex = len(line.split(prefix)[0]) + len(prefix) + 1
+	suffix = line[prefixEndIndex:]
 
 	listType = None
 
