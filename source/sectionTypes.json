@@ -12,6 +12,8 @@
     "Alg": "algorithm",
     "Ds": "corollary",
     "Cr": "corollary",
+    "Tv": "claim",
+    "Clm": "claim",
     "Fakt": "fact",
     "Nt": "note",
     "Blk": "block"

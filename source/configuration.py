@@ -81,6 +81,8 @@ sectionTypes = {
 	'Alg' : 'algorithm',
 	'Ds' : 'corollary',
 	'Cr' : 'corollary',
+	'Tv' : 'claim',
+	'Clm' : 'claim',
 	'Fakt' : 'fact',
 	'Nt' : 'note',
 	'Blk' : 'block'
@@ -97,6 +99,7 @@ sectionCodes = {
 	'example' : 'ex',
 	'algorithm' : 'alg',
 	'corollary' : 'cr',
+	'claim' : 'clm',
 	'problem' : 'pb',
 	'fact' : 'fact',
 	'block' : 'misc'
