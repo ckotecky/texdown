@@ -82,6 +82,7 @@ sectionTypes = {
 	'Ds' : 'corollary',
 	'Cr' : 'corollary',
 	'Fakt' : 'fact',
+	'Nt' : 'note',
 	'Blk' : 'block'
 }
 
@@ -90,6 +91,7 @@ sectionTypes = {
 sectionCodes = {
 	'definition' : 'df',
 	'theorem' : 'th',
+	'note' : 'nt',
 	'observation' : 'ob',
 	'lemma' : 'lm',
 	'example' : 'ex',

@@ -1,6 +1,7 @@
 {
     "definition": "df",
     "theorem": "th",
+    "note": "nt",
     "observation": "ob",
     "lemma": "lm",
     "example": "ex",
