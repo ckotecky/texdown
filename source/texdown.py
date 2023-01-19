@@ -468,7 +468,7 @@ def extractEntry(lines):
 
 		else:
 			entry = TableRow()
-			[entry.addItem(e) for e in tableEntries]
+			[entry.addItem(Line(e)) for e in tableEntries]
 
 		return 0, entry, lines[1:]
 
