@@ -49,6 +49,64 @@ class ListItem(Entry):
 
 
 
+class Table(Entry):
+	def __init__(self):
+		super().__init__()
+
+		self.length = 0
+
+
+	def __repr__(self):
+		whitespace = '\t' * self.indent
+
+		signature = 'c' * self.length
+
+		text = f'\n{whitespace}\\begin{{tabular}}{{{signature}}}\n\n'
+
+		for item in self.items:
+			text += f'{item}\n'
+
+		text += f'\n{whitespace}\\end{{tabular}}\n\n'
+
+		return text
+
+
+	def addItem(self, item):
+		self.items.append(item)
+
+		self.length = max(self.length, len(item.items))
+
+
+
+class TableRow(Entry):
+	def __init__(self):
+		super().__init__()
+
+
+	def __repr__(self):
+		text = '\t'
+
+		for i, item in enumerate(self.items):
+			if i > 0:
+				text += ' & '
+
+			text += str(item)
+
+		return text + ' \\\\'
+
+
+
+
+class TableRowDivider(Entry):
+	def __init__(self):
+		super().__init__()
+
+
+	def __repr__(self):
+		return '\t' + '\\hline'
+
+
+
 class BulletList(Entry):
 	def __init__(self, enumerated):
 		super().__init__()
@@ -68,7 +126,7 @@ class BulletList(Entry):
 		for item in self.items:
 			text += f'{item}\n'
 
-		text += f'\n{whitespace}\\end{{{keyword}}}\n'
+		text += f'\n{whitespace}\\end{{{keyword}}}\n\n'
 
 		return text
 
@@ -401,7 +459,21 @@ def extractEntry(lines):
 			return 0, entry, lines[2:]
 
 	line = lines[0]
+
+	if line[0] == '|':
+		tableEntries = parseTableLine(line)
+
+		if len(tableEntries) < 1:
+			entry = TableRowDivider()
+
+		else:
+			entry = TableRow()
+			[entry.addItem(e) for e in tableEntries]
+
+		return 0, entry, lines[1:]
+
 	indent = len(line) - len(line.lstrip())
+
 
 	suffix, itemType = identifyList(line)
 
@@ -421,6 +493,15 @@ def extractEntry(lines):
 		entry = Line(line)
 
 	return indent, entry, lines[1:]
+
+
+def parseTableLine(line):
+	if len(line) > 3 and line[1:4] == '---':
+		return []
+
+	else:
+		return [e.strip() for e in line.split('|')]
+
 
 
 def identifyList(line):
@@ -460,8 +541,10 @@ def parse(text):
 	indentLengths = {}
 
 	chapter = None
-	section = None
-	subsection = None
+	# section = None
+	# subsection = None
+
+	# table = None
 
 	sectionCount = 0
 
@@ -477,6 +560,7 @@ def parse(text):
 			chapter = entry
 			section = None
 			subsection = None
+			table = None
 
 			sectionCount = 0
 
@@ -492,6 +576,7 @@ def parse(text):
 			chapter = Chapter('')
 			section = None
 			subsection = None
+			table = None
 
 			sectionCount = 0
 
@@ -504,6 +589,7 @@ def parse(text):
 		if isinstance(entry, Section): # start section
 			section = entry
 			subsection = None
+			table = None
 
 			section.count = sectionCount
 			sectionCount += 1
@@ -518,6 +604,7 @@ def parse(text):
 		if section == None: # start implicit section
 			section = Section('', 'block')
 			subsection = None
+			table = None
 
 			section.count = sectionCount
 			sectionCount += 1
@@ -534,6 +621,22 @@ def parse(text):
 			indentLengths = {}
 
 			section.addItem(subsection)
+
+			# ?? shouldn't here be: section = subsection ??
+
+			continue
+
+		if isinstance(entry, TableRow) or isinstance(entry, TableRowDivider):
+			if table == None:
+				table = Table()
+
+				if subsection != None:
+					subsection.addItem(table)
+
+				else:
+					section.addItem(table)
+
+			table.addItem(entry)
 
 			continue
 
