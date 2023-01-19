@@ -9,9 +9,18 @@ stringMap = {
 	'\t' : '\\quad ',
 	'  ' : '\\; ',
 	'   ' : '\\enskip ',
+
+	'~' : '\\sim ',
 	
 	'Σ_' : '\\sum\\limits_',
 	'π_' : '\\prod\\limits_',
+
+	'argmin_' : '\\argmin\\limits_',
+	'argmax_' : '\\argmax\\limits_',
+
+	'min_' : '\\min\\limits_',
+	'max_' : '\\max\\limits_',
+	'lim_' : '\\lim\\limits_',
 
 	'∃' : '\\exists ',
 	'∄' : '\\nexists ',
@@ -43,6 +52,9 @@ stringMap = {
 	'λ' : '\\lambda ',
 	'τ' : '\\tau ',
 	'π' : '\\pi ',
+	'η' : '\\nu ',
+	'μ' : '\\mu ',
+
 
 	'𝓘' : '\\mathcal{I}',
 	'𝓙' : '\\mathcal{F}',
@@ -51,13 +63,20 @@ stringMap = {
 
 	'𝔼' : '\\mathbb{E}',
 	'ℕ' : '\\mathbb{N}',
+	'𝟙' : '\\mathbb{1}',
+
+
 
 	'<=>' : '\\iff ',
 	'=>' : '\\implies ',
 	'<=' : '\\impliedby ',
+	'<->' : '\\leftrightarrow ',
 	'->' : '\\to ',
+	'|->' : '\\mapsto ',
+	'<-' : '\\leftarrow ',
 
 	'≐' : '\\doteq ',
+	'×' : '\\times ',
 	
 	'&' : '\\&',
 	'#' : '\\#',
