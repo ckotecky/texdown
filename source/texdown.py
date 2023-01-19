@@ -57,7 +57,7 @@ class Table(Entry):
 
 
 	def __repr__(self):
-		whitespace = '\t' * self.indent
+		whitespace = '\\\\\n' + '\t' * self.indent
 
 		signature = 'c' * self.length
 
@@ -274,8 +274,6 @@ class CenterBlock(Line):
 		text += '\\end{center}\n'
 
 		return text	
-
-
 
 
 
@@ -630,7 +628,10 @@ def parse(text):
 			if table == None:
 				table = Table()
 
-				if subsection != None:
+				if len(listStack) > 0:
+					listStack[-1].items[-1].addItem(table)
+
+				elif subsection != None:
 					subsection.addItem(table)
 
 				else:
@@ -639,6 +640,9 @@ def parse(text):
 			table.addItem(entry)
 
 			continue
+
+		else:
+			table = None
 
 		# list or text
 		# pop stack until stack's top indent is same or lower
