@@ -22,6 +22,12 @@ stringMap = {
 	'max_' : '\\max\\limits_',
 	'lim_' : '\\lim\\limits_',
 
+	'log_' : '\\log_',
+	
+	'%' : '\\%',
+
+
+
 	'∃' : '\\exists ',
 	'∄' : '\\nexists ',
 	'∀' : '\\forall ',
@@ -52,10 +58,12 @@ stringMap = {
 	'λ' : '\\lambda ',
 	'τ' : '\\tau ',
 	'π' : '\\pi ',
-	'η' : '\\nu ',
+	'η' : '\\eta ',
 	'μ' : '\\mu ',
 
 
+
+	'𝓐' : '\\mathcal{A}',
 	'𝓘' : '\\mathcal{I}',
 	'𝓙' : '\\mathcal{F}',
 	'𝓕' : '\\mathcal{F}',
@@ -63,16 +71,18 @@ stringMap = {
 
 	'𝔼' : '\\mathbb{E}',
 	'ℕ' : '\\mathbb{N}',
-	'𝟙' : '\\mathbb{1}',
+	'𝟙' : '\\mathbbm{1}',
+	'𝟘' : '\\mathbbm{0}',
 
 
 
 	'<=>' : '\\iff ',
 	'=>' : '\\implies ',
+	'=/>' : '\\;\\not\\!\\!\\!\\!\\implies ',
 	'<=' : '\\impliedby ',
 	'<->' : '\\leftrightarrow ',
-	'->' : '\\to ',
 	'|->' : '\\mapsto ',
+	'->' : '\\to ',
 	'<-' : '\\leftarrow ',
 
 	'≐' : '\\doteq ',
@@ -100,6 +110,7 @@ sectionTypes = {
 	'Alg' : 'algorithm',
 	'Ds' : 'corollary',
 	'Cr' : 'corollary',
+	'Pp' : 'proposition',
 	'Tv' : 'claim',
 	'Clm' : 'claim',
 	'Fakt' : 'fact',
@@ -114,6 +125,7 @@ sectionCodes = {
 	'theorem' : 'th',
 	'note' : 'nt',
 	'observation' : 'ob',
+	'proposition' : 'pp',
 	'lemma' : 'lm',
 	'example' : 'ex',
 	'algorithm' : 'alg',

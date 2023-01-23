@@ -3,6 +3,7 @@
     "theorem": "th",
     "note": "nt",
     "observation": "ob",
+    "proposition": "pp",
     "lemma": "lm",
     "example": "ex",
     "algorithm": "alg",

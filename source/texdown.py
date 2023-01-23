@@ -57,7 +57,7 @@ class Table(Entry):
 
 
 	def __repr__(self):
-		whitespace = '\\\\\n' + '\t' * self.indent
+		whitespace = '\\;\\\\\n' + '\t' * self.indent
 
 		signature = 'c' * self.length
 
@@ -92,7 +92,7 @@ class TableRow(Entry):
 
 			text += str(item)
 
-		return text + ' \\\\'
+		return text + ' \\; \\\\'
 
 
 
@@ -498,7 +498,25 @@ def parseTableLine(line):
 		return []
 
 	else:
-		return [e.strip() for e in line.split('|')]
+		items = []
+		# return [e.strip() for e in line.split('|')]
+
+		backtickParity = 0
+		lastDelimiter = 0
+
+		for i, c in enumerate(line[1:]):
+			if c == '`':
+				backtickParity = (backtickParity + 1) % 2
+
+			if c == '|' and backtickParity == 0:
+				l = line[lastDelimiter + 1: i + 1].strip()
+				print(f'"{l}"')
+				items.append(l)
+
+				lastDelimiter = i + 1
+
+		return items
+
 
 
 
