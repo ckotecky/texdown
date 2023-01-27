@@ -3,6 +3,7 @@
 import argparse
 import os
 import json 
+import shutil
 
 from unidecode import unidecode
 
@@ -140,7 +141,7 @@ class Subsection(Entry):
 
 
 	def __repr__(self):
-		text = f'\n\\begin{{{subsectionTypes[self.type]}}}\n'
+		text = f'\n\\begin{{{subsectionTypes[self.type]}}}\\;\n'
 
 		for item in self.items:
 			text += f'{item}\n'
@@ -354,8 +355,9 @@ class Document:
 	def save(self, path):
 		chapterPath = path + '/chapters'
 
-		if not os.path.exists(chapterPath):
-			os.mkdir(chapterPath)
+		# if not os.path.exists(chapterPath):
+		shutil.rmtree(chapterPath)
+		os.mkdir(chapterPath)
 
 		for chapter in self.chapters:
 			chapter.save(chapterPath)
@@ -509,9 +511,7 @@ def parseTableLine(line):
 				backtickParity = (backtickParity + 1) % 2
 
 			if c == '|' and backtickParity == 0:
-				l = line[lastDelimiter + 1: i + 1].strip()
-				print(f'"{l}"')
-				items.append(l)
+				items.append(line[lastDelimiter + 1: i + 1].strip())
 
 				lastDelimiter = i + 1
 
@@ -710,8 +710,14 @@ def parse(text):
 			continue
 
 		# if list stack was empty, add to section or subsection
-		section.addItem(entry)
+		# section.addItem(entry)
 		entry.indent = 0
+
+		if subsection != None:
+			subsection.addItem(entry)
+
+		else:
+			section.addItem(entry)
 
 		# has to be repeated separately?
 		if isinstance(entry, BulletList):

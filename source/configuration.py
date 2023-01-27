@@ -7,13 +7,19 @@ stringMap = {
 	' \\ ' : ' \\backslash ',
 	'`' : '$',
 	'\t' : '\\quad ',
-	'  ' : '\\; ',
 	'   ' : '\\enskip ',
+	'  ' : '\\; ',
 
 	'~' : '\\sim ',
 	
 	'Σ_' : '\\sum\\limits_',
 	'π_' : '\\prod\\limits_',
+	'∫_' : '\\int\\limits_',
+	'∪_' : '\\bigcup\\limits_',
+	'∩_' : '\\bigcap\\limits_',
+	'∨_' : '\\bigvee\\limits_',
+	'∧_' : '\\bigwedge\\limits_',
+
 
 	'argmin_' : '\\argmin\\limits_',
 	'argmax_' : '\\argmax\\limits_',
@@ -43,6 +49,7 @@ stringMap = {
 	'α' : '\\alpha ',
 	'β' : '\\beta ',
 	'γ' : '\\gamma ',
+	'Γ' : '\\Gamma ',
 	'δ' : '\\delta ',
 	'Δ' : '\\Delta ',
 	'Θ' : '\\Theta ',
@@ -53,6 +60,7 @@ stringMap = {
 	'π' : '\\pi ',
 	'ε' : '\\epsilon ',
 	'φ' : '\\varphi ',
+	'Φ' : '\\Phi ',
 	'σ' : '\\sigma ',
 	'Σ' : '\\Sigma ',
 	'λ' : '\\lambda ',
@@ -60,6 +68,7 @@ stringMap = {
 	'π' : '\\pi ',
 	'η' : '\\eta ',
 	'μ' : '\\mu ',
+	'ν' : '\\nu ',
 
 
 
@@ -75,6 +84,12 @@ stringMap = {
 	'𝟘' : '\\mathbbm{0}',
 
 
+	'||\\': ' \\nparallel ',
+	'||/': ' \\nparallel ',
+
+	'|\\' : ' \\nmid ',
+	'|/' : ' \\nmid ',
+
 
 	'<=>' : '\\iff ',
 	'=>' : '\\implies ',
@@ -84,6 +99,9 @@ stringMap = {
 	'|->' : '\\mapsto ',
 	'->' : '\\to ',
 	'<-' : '\\leftarrow ',
+	
+	'<<' : '\\ll ',
+	'>>' : '\\gg ',
 
 	'≐' : '\\doteq ',
 	'×' : '\\times ',
@@ -91,9 +109,11 @@ stringMap = {
 	'&' : '\\&',
 	'#' : '\\#',
 
+	'⨃' : '\\uplus',
 	'⨄' : '\\uplus',
 	'∪' : '\\cup',
 	'∩' : '\\cap'
+
 }
 
 sectionTypes = {
